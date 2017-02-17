@@ -49,3 +49,6 @@ ftpUpload.php
 nbproject
 run.php
 run.bat
+sharefile/logs
+sharefile/download
+sharefile/tmp
