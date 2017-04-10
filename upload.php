@@ -45,6 +45,35 @@ function delTree($dir)
     return rmdir($dir);
 }
 
+function delFiles($dir)
+{
+    /*
+     * Удаляем файлы старше 30 дней и пустые папки
+     */
+    $files = array_diff(scandir($dir), array('.', '..'));
+    foreach ($files as $file)
+    {
+        if (is_dir("$dir/$file"))
+        {
+            delFiles("$dir/$file");
+        }
+        else
+        {
+            $date1 = new DateTime("now");
+            $date2 = new DateTime(date("d.m.Y", filectime("$dir/$file")));
+            $diff = $date1->diff($date2);
+            if ($diff->days > 30)
+            {
+                if ($file !== '.htaccess')
+                {
+                    unlink("$dir/$file");
+                }
+            }
+        }
+    }
+    @rmdir($dir);
+}
+
 function loging($href)
 {
     $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
@@ -97,7 +126,6 @@ mkdir("./sharefile/download/" . $cryptfolder, 0700);
 //var_dump($_POST['checked']);
 foreach ($_FILES as $key => $value)
 { //перемещение файлов в tmp
-    
     move_uploaded_file($value['tmp_name'], "./sharefile/tmp/" . $cryptfolder . "/" . TranslateFileName($value['name']));
     $count++;
 }
@@ -109,7 +137,7 @@ if ($count > 1 or $count == 1 && $_POST['checked'] == 'true')
     // Делаем архив
     $dw_file = './sharefile/download/' . date('Ymj_His') . $cryptfolder . '.zip';
     $archive = new PclZip($dw_file); //Создаём объект и в качестве аргумента, указываем название архива, с которым работаем.
-    $result = $archive->create('./sharefile/tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './sharefile/tmp/' . $cryptfolder . '/'); 
+    $result = $archive->create('./sharefile/tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './sharefile/tmp/' . $cryptfolder . '/');
     //// Этим методом класса мы создаём архив с заданным выше названием 
     // Если всё прошло хорошо, возращаем массив с данными (время создание архива, занесённым файлом и т.д)
 }
@@ -119,8 +147,7 @@ else
      * Если файл один то перемещаем его в отдельную папку и кидаем ссылку пользователю
      */
     rename(
-            "./sharefile/tmp/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']), 
-            "./sharefile/download/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name'])
+            "./sharefile/tmp/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']), "./sharefile/download/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name'])
     );
     $dw_file = "./sharefile/download/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']);
     $result = 1;
@@ -134,13 +161,14 @@ if ($result == 0)
 }
 
 @delTree('./sharefile/tmp/' . $cryptfolder);
+delFiles('./sharefile/download/');
 
 //показываем файл
 echo '
 <div class="alert alert-success text-center">
-  <h3><a href="' . $dw_file . '">Скачать файл</a></h3>
-      <h3><a href="mailto:?subject=Файлообменник ВОЭ&body=Чтобы скачать файл нажмите на ссылку: http://' . $_SERVER['HTTP_HOST']. ltrim($dw_file, ".") .'  '
-        . ' Размер файла: ' . formatSizeUnits(@filesize($dw_file)) . '">Отправить ссылку по почте</a></h3>
+  <h3><a href="' . $dw_file . '" class="btn btn-primary btn-lg btn-block">Скачать файл</a></h3>
+      <h3><a href="mailto:?subject=Файлообменник ВОЭ&body=Чтобы скачать файл нажмите на ссылку: http://' . $_SERVER['HTTP_HOST'] . ltrim($dw_file, ".") . '  '
+ . ' Размер файла: ' . formatSizeUnits(@filesize($dw_file)) . '" class="btn btn-primary btn-lg btn-block">Отправить ссылку по почте</a></h3>
       <p>Размер файла: ' . formatSizeUnits(@filesize($dw_file)) . '</p>
   <hr>
   <div class="form">
