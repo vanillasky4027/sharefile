@@ -137,7 +137,7 @@ if ($count > 1 or $count == 1 && $_POST['checked'] == 'true')
     // Делаем архив
     $dw_file = './sharefile/download/' . date('Ymj_His') . $cryptfolder . '.zip';
     $archive = new PclZip($dw_file); //Создаём объект и в качестве аргумента, указываем название архива, с которым работаем.
-    $result = $archive->create('./sharefile/tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './sharefile/tmp/' . $cryptfolder . '/');
+    $result = @$archive->create('./sharefile/tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './sharefile/tmp/' . $cryptfolder . '/');
     //// Этим методом класса мы создаём архив с заданным выше названием 
     // Если всё прошло хорошо, возращаем массив с данными (время создание архива, занесённым файлом и т.д)
 }
@@ -165,17 +165,17 @@ delFiles('./sharefile/download/');
 
 //показываем файл
 echo '
-<div class="alert alert-success text-center">
-  <h3><a href="' . $dw_file . '" class="btn btn-primary btn-lg btn-block">Скачать файл</a></h3>
-      <h3><a href="mailto:?subject=Файлообменник ВОЭ&body=Чтобы скачать файл нажмите на ссылку: http://' . $_SERVER['HTTP_HOST'] . ltrim($dw_file, ".") . '  '
- . ' Размер файла: ' . formatSizeUnits(@filesize($dw_file)) . '" class="btn btn-primary btn-lg btn-block">Отправить ссылку по почте</a></h3>
+<div class="alert alert-light text-center">
+  <h3><a href="' . $dw_file . '" class="btn btn-secondary btn-lg btn-block">Скачать файл</a></h3>
+      <h3><a href="mailto:?subject=Файлообменник ВОЭ&body=Чтобы скачать файл нажмите на ссылку: https://' . $_SERVER['HTTP_HOST'] . '/files' . ltrim($dw_file, ".") . '  '
+ . ' Размер файла: ' . formatSizeUnits(@filesize($dw_file)) . '" class="btn btn-secondary btn-lg btn-block">Отправить ссылку по почте</a></h3>
       <p>Размер файла: ' . formatSizeUnits(@filesize($dw_file)) . '</p>
   <hr>
   <div class="form">
     <label for="link">Ссылка для загрузки отправленных вами файлов</label>
-    <textarea class="form-control" id="link" value=""  rows="3">http://' . $_SERVER['HTTP_HOST'] . ltrim($dw_file, ".") . '</textarea>
-    <br><a href="/" class="btn btn-success btn-lg btn-block">Загрузить новые файлы</a>
+    <textarea class="form-control" id="link" value=""  rows="3">https://' . $_SERVER['HTTP_HOST']. '/files' . ltrim($dw_file, ".") . '</textarea>
+    <br><a href="http://' . $_SERVER['HTTP_HOST']. '/files" class="btn btn-secondary btn-lg btn-block">Загрузить новые файлы</a>
   </div>
 </div>';
 //  пишем лог
-loging('http://' . $_SERVER['HTTP_HOST'] . ltrim($dw_file, "."));
+loging('https://' . $_SERVER['HTTP_HOST'] . ltrim($dw_file, "."));

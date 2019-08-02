@@ -4,9 +4,9 @@ width: 256px; /* размеры кноки */
 height: 256px;
 display: inline-block;
 vertical-align: middle;
-background: url(/img/upload.png);
+background: url(../img/upload.png);
 background-repeat: no-repeat;
-behavior: url(/lib/pie/backgroundsize.min.htc);
+behavior: url(../lib/pie/backgroundsize.min.htc);
 background-size: cover;
 overflow: hidden; /* поможет избежать выхода поля за границы кнопки */
 position: relative; /* относительно этого блока будем позиционировать поле */
@@ -22,7 +22,7 @@ cursor: pointer;
 font-size: 256px;
 }
 .button:hover {
-    background: url(/img/upload_hover.png);
+    background: url(../img/upload_hover.png);
     background-repeat: no-repeat;
     background-size: 256px;
 }
