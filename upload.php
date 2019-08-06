@@ -3,6 +3,7 @@
 include_once('./lib/pclzip/pclzip.lib.php'); //Подключаем библиотеку.
 // функция превода текста с кириллицы в траскрипт
 // без учета регистра только для файлов
+include_once('./lib/hash.php'); //Создание хэшей
 
 function TranslateFileName($filename)
 {
@@ -78,7 +79,7 @@ function loging($href)
 {
     $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
     $file = './sharefile/logs/log' . date('Y_m_j') . '.txt';
-    $fileSize = formatSizeUnits(@filesize(str_ireplace("http://" . $_SERVER['HTTP_HOST'], ".", $href)));
+    $fileSize = formatSizeUnits(@filesize(str_ireplace("https://" . $_SERVER['HTTP_HOST'], ".", $href)));
 
     $data = $hostname . " | " . $_SERVER['REMOTE_ADDR'] . " | " . date('Y.m.j H:i:s') . "| " . $href . " | " . $fileSize . ";  \r\n";
     // Пишем содержимое в файл,
@@ -117,11 +118,14 @@ function formatSizeUnits($bytes)
     return $bytes;
 }
 
+
+
+
 /* ------------------------------------------------------------------------------------------- */
 $count = 0;
-$cryptfolder = "_" . md5(date('j_m_Y_H_i_s') . "voefiles");
+$cryptfolder = substr(md5(date('jmYHis')), 0, 5);
 mkdir("./sharefile/tmp/" . $cryptfolder, 0700);
-mkdir("./sharefile/download/" . $cryptfolder, 0700);
+mkdir("./d/" . $cryptfolder, 0700);
 
 //var_dump($_POST['checked']);
 foreach ($_FILES as $key => $value)
@@ -135,7 +139,7 @@ if ($count > 1 or $count == 1 && $_POST['checked'] == 'true')
 {
     //echo 'arh';
     // Делаем архив
-    $dw_file = './sharefile/download/' . date('Ymj_His') . $cryptfolder . '.zip';
+    $dw_file = './d/'. $cryptfolder . '.zip';
     $archive = new PclZip($dw_file); //Создаём объект и в качестве аргумента, указываем название архива, с которым работаем.
     $result = @$archive->create('./sharefile/tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './sharefile/tmp/' . $cryptfolder . '/');
     //// Этим методом класса мы создаём архив с заданным выше названием 
@@ -147,9 +151,9 @@ else
      * Если файл один то перемещаем его в отдельную папку и кидаем ссылку пользователю
      */
     rename(
-            "./sharefile/tmp/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']), "./sharefile/download/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name'])
+            "./sharefile/tmp/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']), "./d/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name'])
     );
-    $dw_file = "./sharefile/download/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']);
+    $dw_file = "./d/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']);
     $result = 1;
 }
 
@@ -161,7 +165,7 @@ if ($result == 0)
 }
 
 @delTree('./sharefile/tmp/' . $cryptfolder);
-delFiles('./sharefile/download/');
+delFiles('./d/');
 
 //показываем файл
 echo '
