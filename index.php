@@ -53,6 +53,7 @@
                                                     <div class="sr-onlys" style="color: white; display: block;">0%</div>
                                                 </div>
                                             </div>
+                                            <p id="progress-total" class="text-center"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -119,6 +120,7 @@
                         $('.progress').show();
                         $('.progress-bar').css('width', e.loaded / e.total * 100 + '%');
                         $('.sr-onlys').text(Math.round(e.loaded / e.total * 100) + '%');
+                        $('#progress-total').text((e.loaded / 1048576).toFixed(2)  + 'Мб из ' +  (e.total / 1048576).toFixed(2) + 'Мб');
                         if (e.loaded / e.total * 100 == 100) {
                             var i = 0;
                             setInterval(function () {
