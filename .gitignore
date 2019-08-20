@@ -51,3 +51,5 @@ run.php
 run.bat
 sharefile
 d
+tmp
+logs

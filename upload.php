@@ -78,7 +78,7 @@ function delFiles($dir)
 function loging($href)
 {
     $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-    $file = './sharefile/logs/log' . date('Y_m_j') . '.txt';
+    $file = './logs/log' . date('Y_m_j') . '.txt';
     $fileSize = formatSizeUnits(@filesize(str_ireplace("https://" . $_SERVER['HTTP_HOST'], ".", $href)));
 
     $data = $hostname . " | " . $_SERVER['REMOTE_ADDR'] . " | " . date('Y.m.j H:i:s') . "| " . $href . " | " . $fileSize . ";  \r\n";
@@ -124,13 +124,13 @@ function formatSizeUnits($bytes)
 /* ------------------------------------------------------------------------------------------- */
 $count = 0;
 $cryptfolder = substr(md5(date('jmYHis')), 0, 5);
-mkdir("./sharefile/tmp/" . $cryptfolder, 0700);
+mkdir("./tmp/" . $cryptfolder, 0700);
 mkdir("./d/" . $cryptfolder, 0700);
 
 //var_dump($_POST['checked']);
 foreach ($_FILES as $key => $value)
 { //перемещение файлов в tmp
-    move_uploaded_file($value['tmp_name'], "./sharefile/tmp/" . $cryptfolder . "/" . TranslateFileName($value['name']));
+    move_uploaded_file($value['tmp_name'], "./tmp/" . $cryptfolder . "/" . TranslateFileName($value['name']));
     $count++;
 }
 
@@ -141,7 +141,7 @@ if ($count > 1 or $count == 1 && $_POST['checked'] == 'true')
     // Делаем архив
     $dw_file = './d/'. $cryptfolder . '.zip';
     $archive = new PclZip($dw_file); //Создаём объект и в качестве аргумента, указываем название архива, с которым работаем.
-    $result = @$archive->create('./sharefile/tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './sharefile/tmp/' . $cryptfolder . '/');
+    $result = @$archive->create('./tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './sharefile/tmp/' . $cryptfolder . '/');
     //// Этим методом класса мы создаём архив с заданным выше названием 
     // Если всё прошло хорошо, возращаем массив с данными (время создание архива, занесённым файлом и т.д)
 }
@@ -151,7 +151,7 @@ else
      * Если файл один то перемещаем его в отдельную папку и кидаем ссылку пользователю
      */
     rename(
-            "./sharefile/tmp/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']), "./d/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name'])
+            "./tmp/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']), "./d/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name'])
     );
     $dw_file = "./d/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']);
     $result = 1;
@@ -164,7 +164,7 @@ if ($result == 0)
     echo $archive->errorInfo(true); //Возращает причину ошибки
 }
 
-@delTree('./sharefile/tmp/' . $cryptfolder);
+@delTree('./tmp/' . $cryptfolder);
 delFiles('./d/');
 
 //показываем файл
