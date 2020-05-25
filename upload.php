@@ -141,7 +141,7 @@ if ($count > 1 or $count == 1 && $_POST['checked'] == 'true')
     // Делаем архив
     $dw_file = './d/'. $cryptfolder . '.zip';
     $archive = new PclZip($dw_file); //Создаём объект и в качестве аргумента, указываем название архива, с которым работаем.
-    $result = @$archive->create('./tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './sharefile/tmp/' . $cryptfolder . '/');
+    $result = @$archive->create('./tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './tmp/' . $cryptfolder . '/');
     //// Этим методом класса мы создаём архив с заданным выше названием 
     // Если всё прошло хорошо, возращаем массив с данными (время создание архива, занесённым файлом и т.д)
 }
