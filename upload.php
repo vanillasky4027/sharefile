@@ -119,8 +119,6 @@ function formatSizeUnits($bytes)
 }
 
 
-
-
 /* ------------------------------------------------------------------------------------------- */
 $count = 0;
 $cryptfolder = substr(md5(date('jmYHis')), 0, 5);
@@ -151,7 +149,8 @@ else
      * Если файл один то перемещаем его в отдельную папку и кидаем ссылку пользователю
      */
     rename(
-            "./tmp/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']), "./d/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name'])
+            "./tmp/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']),
+            "./d/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name'])
     );
     $dw_file = "./d/" . $cryptfolder . "/" . TranslateFileName($_FILES['file-0']['name']);
     $result = 1;
@@ -159,10 +158,7 @@ else
 
 
 //var_dump($result);
-if ($result == 0)
-{
-    echo $archive->errorInfo(true); //Возращает причину ошибки
-}
+if ($result == 0) echo $archive->errorInfo(true); //Возращает причину ошибки
 
 @delTree('./tmp/' . $cryptfolder);
 delFiles('./d/');
