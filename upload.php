@@ -142,7 +142,7 @@ if ($count > 1 or $count == 1 && $_POST['checked'] == 'true')
     $dw_file = './d/'. $cryptfolder . '.zip';
     $archive = new PclZip($dw_file); //Создаём объект и в качестве аргумента, указываем название архива, с которым работаем.
     $result = @$archive->create('./tmp/' . $cryptfolder . '/', PCLZIP_OPT_REMOVE_PATH, './tmp/' . $cryptfolder . '/');
-    //// Этим методом класса мы создаём архив с заданным выше названием 
+    //// Этим методом класса мы создаём архив с заданным выше названием
     // Если всё прошло хорошо, возращаем массив с данными (время создание архива, занесённым файлом и т.д)
 }
 else
@@ -158,7 +158,7 @@ else
 }
 
 
-//var_dump($result); 
+//var_dump($result);
 if ($result == 0)
 {
     echo $archive->errorInfo(true); //Возращает причину ошибки
@@ -170,7 +170,8 @@ delFiles('./d/');
 //показываем файл
 echo '
 <div class="alert alert-light text-center">
-  <h3><a href="' . $dw_file . '" class="btn btn-secondary btn-lg btn-block">Скачать файл</a></h3>
+  <!--<h3><a href="' . $dw_file . '" class="btn btn-secondary btn-lg btn-block">Скачать файл</a></h3>-->
+  <h3><a href="#" id="copyTextLink" class="btn btn-primary btn-lg btn-block" onclick="copyTextToBuffer()">Копировать ссылку в буфер обмена</a></h3>
       <h3><a href="mailto:?subject=Файлообменник ВОЭ&body=Чтобы скачать файл нажмите на ссылку: https://' . $_SERVER['HTTP_HOST'] . '/files' . ltrim($dw_file, ".") . '  '
  . ' Размер файла: ' . formatSizeUnits(@filesize($dw_file)) . '" class="btn btn-secondary btn-lg btn-block">Отправить ссылку по почте</a></h3>
       <p>Размер файла: ' . formatSizeUnits(@filesize($dw_file)) . '</p>

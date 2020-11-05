@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="css/default.css">
 
         <script src="/src/js/jquery-3.4.1.min.js"></script>
-        <script src="/src/bootstrap4/js/bootstrap.min.js"></script>       
+        <script src="/src/bootstrap4/js/bootstrap.min.js"></script>
         <script src="js/bootstrap-toggle.min.js"></script>
     </head>
     <body>
@@ -32,7 +32,7 @@
                                                 <input id="file" type="file" multiple="multiple" name="file[]"/>
                                             </div>
                                         </div>
-    
+
                                     </div>
                                 </div>
                                 <div class="row justify-content-center">
@@ -57,12 +57,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="info" class="alert"></div><!-- сюда будет выводится информация о загрузке -->  
+                                <div id="info" class="alert"></div><!-- сюда будет выводится информация о загрузке -->
                             </form>
                             <p class="text-center text-muted">Максимальное кол-во загружаемых файлов не должно превышать 600 шт. и в сумме не более 5Гб. Ссылка на загрузку файлов доступна только внутри корпоративной сети ВОЭ.</p>
                             <p class="text-center text-muted">
-                                <small>доступно места на сервере: <?php 
-                                         echo formatSizeUnits(disk_free_space("/var/www")); 
+                                <small>доступно места на сервере: <?php
+                                         echo formatSizeUnits(disk_free_space("/var/www"));
                                 ?></small>
                             </p>
                         </div>
@@ -186,17 +186,23 @@
 
                             ,
                             error: errorHandler = function () {
-                                $('#info').html('Ошибка загрузки файлов. Скорее всего вы отправили слишком большой объем файлов (больше 5Гб)').addClass('alert-danger');
+                                $('#info').html('Ошибка загрузки файлов. Возможно вы отправили слишком большой объем файлов (больше 5Гб) или возникла сетевая ошибка').addClass('alert-danger');
                             }
 
                         });
 
                     }
                 })
-
             });
 
-
+            function copyTextToBuffer() {
+                var linkText = document.getElementById("link");
+                var linkBtn = document.getElementById("copyTextLink");
+                linkText.select();
+                document.execCommand("copy");
+                linkBtn.classList.add("btn-success")
+                linkBtn.textContent = "✓ Скопировано"
+            }
         </script>
 
     </body>
